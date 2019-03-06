@@ -1,6 +1,17 @@
-<head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54334811-3"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54334811-3');
+</script>
 
 <textarea id="source_text" cols="80" rows="10" style="display: none"></textarea>
 <textarea id="source_text_1" cols="80" rows="10" style="display: none"></textarea>
@@ -16,32 +27,110 @@
 <h1>Relative frequencies of letters in the English language</h1>
 <div>
     <table>
-        <tr><td>e</td><td>12.702%</td></tr>
-        <tr><td>t</td><td>9.056%</td></tr>
-        <tr><td>a</td><td>8.167%</td></tr>
-        <tr><td>o</td><td>7.507%</td></tr>
-        <tr><td>i</td><td>6.966%</td></tr>
-        <tr><td>n</td><td>6.749%</td></tr>
-        <tr><td>s</td><td>6.327%</td></tr>
-        <tr><td>h</td><td>6.094%</td></tr>
-        <tr><td>r</td><td>5.987%</td></tr>
-        <tr><td>d</td><td>4.253%</td></tr>
-        <tr><td>l</td><td>4.025%</td></tr>
-        <tr><td>c</td><td>2.782%</td></tr>
-        <tr><td>u</td><td>2.758%</td></tr>
-        <tr><td>m</td><td>2.406%</td></tr>
-        <tr><td>w</td><td>2.360%</td></tr>
-        <tr><td>f</td><td>2.228%</td></tr>
-        <tr><td>g</td><td>2.015%</td></tr>
-        <tr><td>y</td><td>1.974%</td></tr>
-        <tr><td>p</td><td>1.929%</td></tr>
-        <tr><td>b</td><td>1.492%</td></tr>
-        <tr><td>v</td><td>0.978%</td></tr>
-        <tr><td>k</td><td>0.772%</td></tr>
-        <tr><td>j</td><td>0.153%</td></tr>
-        <tr><td>x</td><td>0.150%</td></tr>
-        <tr><td>q</td><td>0.095%</td></tr>
-        <tr><td>z</td><td>0.074%</td></tr>
+        <tr>
+            <td>e</td>
+            <td>12.702%</td>
+        </tr>
+        <tr>
+            <td>t</td>
+            <td>9.056%</td>
+        </tr>
+        <tr>
+            <td>a</td>
+            <td>8.167%</td>
+        </tr>
+        <tr>
+            <td>o</td>
+            <td>7.507%</td>
+        </tr>
+        <tr>
+            <td>i</td>
+            <td>6.966%</td>
+        </tr>
+        <tr>
+            <td>n</td>
+            <td>6.749%</td>
+        </tr>
+        <tr>
+            <td>s</td>
+            <td>6.327%</td>
+        </tr>
+        <tr>
+            <td>h</td>
+            <td>6.094%</td>
+        </tr>
+        <tr>
+            <td>r</td>
+            <td>5.987%</td>
+        </tr>
+        <tr>
+            <td>d</td>
+            <td>4.253%</td>
+        </tr>
+        <tr>
+            <td>l</td>
+            <td>4.025%</td>
+        </tr>
+        <tr>
+            <td>c</td>
+            <td>2.782%</td>
+        </tr>
+        <tr>
+            <td>u</td>
+            <td>2.758%</td>
+        </tr>
+        <tr>
+            <td>m</td>
+            <td>2.406%</td>
+        </tr>
+        <tr>
+            <td>w</td>
+            <td>2.360%</td>
+        </tr>
+        <tr>
+            <td>f</td>
+            <td>2.228%</td>
+        </tr>
+        <tr>
+            <td>g</td>
+            <td>2.015%</td>
+        </tr>
+        <tr>
+            <td>y</td>
+            <td>1.974%</td>
+        </tr>
+        <tr>
+            <td>p</td>
+            <td>1.929%</td>
+        </tr>
+        <tr>
+            <td>b</td>
+            <td>1.492%</td>
+        </tr>
+        <tr>
+            <td>v</td>
+            <td>0.978%</td>
+        </tr>
+        <tr>
+            <td>k</td>
+            <td>0.772%</td>
+        </tr>
+        <tr>
+            <td>j</td>
+            <td>0.153%</td>
+        </tr>
+        <tr>
+            <td>x</td>
+            <td>0.150%</td>
+        </tr>
+        <tr>
+            <td>q</td>
+            <td>0.095%</td>
+        </tr>
+        <tr>
+            <td>z</td>
+            <td>0.074%</td>
+        </tr>
     </table>
 </div>
 <script>
@@ -59,7 +148,7 @@
         $("#level").text(++level);
         while (result.length < 1000) {
             article++;
-            result += articles[article % articles.length]+" ";
+            result += articles[article % articles.length] + " ";
         }
         return result;
     }
@@ -130,8 +219,9 @@
         var tr;
         var col = 4;
         for (var i in a) {
-            if(i%col == 0)
+            if (i % col == 0) {
                 tr = $("#container").append($("<tr>"));
+            }
 
             console.log(a[i].c);
             tr.append($("<td>" + a[i].c + " (" + a[i].f + ")</td><td><input size='2' id='input_" + i + "'></td>"));
@@ -160,7 +250,7 @@
             var v = $("#input_" + i).val();
             dic[a[i].c].i = i;
             if (v.length > 1) {
-                v=v[v.length-1];
+                v = v[v.length - 1];
                 $("#input_" + i).val(v);
             }
             if (v.length == 1) {
