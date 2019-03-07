@@ -1,5 +1,16 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
+<style>
+    .letter {
+    }
+    .letter.bold {
+        font-weight: bold;
+    }
+
+    .result {
+        font-family: "Courier New", Courier, monospace;
+    }
+</style>
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-54334811-3"></script>
 <script>
     window.dataLayer = window.dataLayer || [];
@@ -21,7 +32,7 @@
 <input id="shuffle_button" type="button" value="Next level"/>
 <input id="help_button" type="button" value="Reveal 1 letter" onclick="help()"/>
 
-<div id="result"></div>
+<div id="result" class="result" ></div>
 <table id="container"></table>
 
 <h1>Relative frequencies of letters in the English language</h1>
@@ -138,7 +149,11 @@
     var text;
     var dic = {};
     var ori_chars = "abcdefghijklmnopqrstuvwxyz";
-    var new_chars = "@#$%^&*θ=][{}Æ<>§ΔΞΩ~¥©¶ØÐ";
+    var new_chars = "БГДËЖЗИЙЛПФЦЧШЩЬЪЫЭЮЯ@$#&Ωθ";
+    // var new_chars = "@#$%^&*θ=][{}Æ<>§ΔΞΩ~¥©¶ØÐ";
+    // var new_chars = "☀☁☂☃★☉☊☍☎☚☞☯☰☻☾♔♕♖\t♗♘\t♙♡♢♤♧♨\t";
+    // var new_chars = "☞☖☏☆☃☉☊♔♕♖♗♘♙♡♢♤♧♨࿊☺☼♬♲⚠☑☒☽";
+    // var new_chars = "☞☖☏☆☃☉☊♔♕♖♗♘♙♡♢♤♧♨࿊☺☼♬♲⚠☑☒☽";
     var level = 0;
     var article = 0;
 
@@ -268,12 +283,11 @@
                 $("#result").append("<span>" + c + "</span>");
             } else if (!!dic[c] && !!dic[c].v) {
                 $("#result").append(
-                    "<span style='font-weight: bold;' onclick='focusOnElement(" + dic[c].i + ")' class='symbol_" + dic[c].i + "'>"
-                    + dic[c].v + "</span>");
+                    "<span class='letter bold' onclick='focusOnElement(" + dic[c].i + ")' " + "class='symbol_" + dic[c].i + "'>" + dic[c].v
+                    + "</span>");
             } else {
                 $("#result").append(
-                    "<span  style=\"color: grey\" onclick='focusOnElement(" + dic[c].i + ")' class='symbol_" + dic[c].i + "' >" + c +
-                    "</span>");
+                    "<span class='letter' onclick='focusOnElement(" + dic[c].i + ")' class='symbol_" + dic[c].i + "' >" + c + "</span>");
             }
         }
     }
