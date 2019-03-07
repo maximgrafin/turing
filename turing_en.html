@@ -283,11 +283,11 @@
                 $("#result").append("<span>" + c + "</span>");
             } else if (!!dic[c] && !!dic[c].v) {
                 $("#result").append(
-                    "<span class='letter bold' onclick='focusOnElement(" + dic[c].i + ")' " + "class='symbol_" + dic[c].i + "'>" + dic[c].v
+                    "<span class='letter bold symbol_" + dic[c].i + "' onclick='focusOnElement(" + dic[c].i + ")' " + ">" + dic[c].v
                     + "</span>");
             } else {
                 $("#result").append(
-                    "<span class='letter' onclick='focusOnElement(" + dic[c].i + ")' class='symbol_" + dic[c].i + "' >" + c + "</span>");
+                    "<span class='letter symbol_" + dic[c].i + "' onclick='focusOnElement(" + dic[c].i + ")' class='symbol_" + dic[c].i + "' >" + c + "</span>");
             }
         }
     }
