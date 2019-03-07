@@ -161,6 +161,7 @@
         var articles = book.split("\n");
         var result = "";
         $("#level").text(++level);
+        window.location.hash = level;
         while (result.length < 500) {
             article++;
             result += articles[article % articles.length] + " ";
