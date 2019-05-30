@@ -46,7 +46,6 @@
 <textarea id="source_text" cols="80" rows="10" style="display: none"></textarea>
 <textarea id="source_text_1" cols="80" rows="10" style="display: none"></textarea>
 
-
 <h1>Level: <span id="level"></span></h1>
 <input id="shuffle_button" type="button" value="Next level"/>
 <input id="help_button" type="button" value="Reveal 1 letter" onclick="help()"/>
@@ -244,17 +243,20 @@
             if (dic[a[highlightedIndex].c].v == val) {
                 $("#input_" + highlightedIndex).val("");
                 onCharChanged2(highlightedIndex, a[highlightedIndex].c);
-                markSolved(highlightedIndex, false);
+                markSolved(highlightedIndex, val, false);
             } else {
                 $("#input_" + highlightedIndex).val(val);
                 onCharChanged2(highlightedIndex, val);
-                markSolved(highlightedIndex, true);
+                markSolved(highlightedIndex, val, true);
             }
+        } else {
+            // TODO highlight symbol if there is any
         }
     }
 
-    function markSolved (i, isSolved) {
+    function markSolved (i, val, isSolved) {
         $(".letter_" + i).toggleClass("solved", isSolved);
+        $(".keyboard_button_" + val).toggleClass("solved", isSolved);
     }
 
     function updateLevel () {
@@ -372,7 +374,6 @@
             console.log(a[i].c);
             tr.append($("<td>" + a[i].c + " (" + a[i].f + ")</td><td><input size='2' id='input_" + i + "'></td>"));
             $("#input_" + i).focus(higlight.bind(i, i));
-            $("#input_" + i).focusout(onFocusLeft.bind(i, i));
             $("#input_" + i).keyup(onCharChanged.bind(i, i));
         }
     }
@@ -412,11 +413,6 @@
     function onCharChanged (i) {
         replace();
         higlight(i);
-    }
-
-    function onFocusLeft (i) {
-        onCharChanged(i);
-        $(".symbol_" + i).css("background", "");
     }
 
     function replace () {
@@ -474,6 +470,7 @@
             if ($("#input_" + i).val() != o) {
                 $("#input_" + i).val(o);
                 onCharChanged2(i, o);
+                markSolved(i, o, true);
                 return;
             }
         }
