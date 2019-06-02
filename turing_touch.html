@@ -26,6 +26,8 @@
         width: 10%;
         padding: 0;
         cursor: pointer;
+        font-weight: bold;
+
         /*margin: 2pt;*/
     }
 
@@ -47,10 +49,12 @@
 <textarea id="source_text_1" cols="80" rows="10" style="display: none"></textarea>
 
 <h1>Level: <span id="level"></span></h1>
-<input id="shuffle_button" type="button" value="Next level"/>
+<input id="nextLevel_button" type="button" value="Next level"/>
 <input id="help_button" type="button" value="Reveal 1 letter" onclick="help()"/>
 
-<div id="result" class="result"></div>
+<div id="result" class="result" style="display: none"></div>
+
+<div id="text_field" class="result"></div>
 
 <table id="enc_letters_container">
 </table>
@@ -58,43 +62,43 @@
 <div>
     <table class="keyboard_button_container">
         <tr>
-            <td class="keyboard_button keyboard_button_q">Q</td>
-            <td class="keyboard_button keyboard_button_w">W</td>
-            <td class="keyboard_button keyboard_button_e">E</td>
-            <td class="keyboard_button keyboard_button_r">R</td>
-            <td class="keyboard_button keyboard_button_t">T</td>
-            <td class="keyboard_button keyboard_button_y">Y</td>
-            <td class="keyboard_button keyboard_button_u">U</td>
-            <td class="keyboard_button keyboard_button_i">I</td>
-            <td class="keyboard_button keyboard_button_o">O</td>
-            <td class="keyboard_button keyboard_button_p">P</td>
+            <td class="keyboard_button keyboard_button_q">q</td>
+            <td class="keyboard_button keyboard_button_w">w</td>
+            <td class="keyboard_button keyboard_button_e">e</td>
+            <td class="keyboard_button keyboard_button_r">r</td>
+            <td class="keyboard_button keyboard_button_t">t</td>
+            <td class="keyboard_button keyboard_button_y">y</td>
+            <td class="keyboard_button keyboard_button_u">u</td>
+            <td class="keyboard_button keyboard_button_i">i</td>
+            <td class="keyboard_button keyboard_button_o">o</td>
+            <td class="keyboard_button keyboard_button_p">p</td>
         </tr>
     </table>
     <table class="keyboard_button_container">
         <tr>
             <td style="width: 5%"></td>
-            <td class="keyboard_button keyboard_button_a">A</td>
-            <td class="keyboard_button keyboard_button_s">S</td>
-            <td class="keyboard_button keyboard_button_d">D</td>
-            <td class="keyboard_button keyboard_button_f">F</td>
-            <td class="keyboard_button keyboard_button_g">G</td>
-            <td class="keyboard_button keyboard_button_h">H</td>
-            <td class="keyboard_button keyboard_button_j">J</td>
-            <td class="keyboard_button keyboard_button_k">K</td>
-            <td class="keyboard_button keyboard_button_l">L</td>
+            <td class="keyboard_button keyboard_button_a">a</td>
+            <td class="keyboard_button keyboard_button_s">s</td>
+            <td class="keyboard_button keyboard_button_d">d</td>
+            <td class="keyboard_button keyboard_button_f">f</td>
+            <td class="keyboard_button keyboard_button_g">g</td>
+            <td class="keyboard_button keyboard_button_h">h</td>
+            <td class="keyboard_button keyboard_button_j">j</td>
+            <td class="keyboard_button keyboard_button_k">k</td>
+            <td class="keyboard_button keyboard_button_l">l</td>
             <td style="width: 5%"></td>
         </tr>
     </table>
     <table class="keyboard_button_container">
         <tr>
             <td style="width: 15%"></td>
-            <td class="keyboard_button keyboard_button_z">Z</td>
-            <td class="keyboard_button keyboard_button_x">X</td>
-            <td class="keyboard_button keyboard_button_c">C</td>
-            <td class="keyboard_button keyboard_button_v">V</td>
-            <td class="keyboard_button keyboard_button_b">B</td>
-            <td class="keyboard_button keyboard_button_n">N</td>
-            <td class="keyboard_button keyboard_button_m">M</td>
+            <td class="keyboard_button keyboard_button_z">z</td>
+            <td class="keyboard_button keyboard_button_x">x</td>
+            <td class="keyboard_button keyboard_button_c">c</td>
+            <td class="keyboard_button keyboard_button_v">v</td>
+            <td class="keyboard_button keyboard_button_b">b</td>
+            <td class="keyboard_button keyboard_button_n">n</td>
+            <td class="keyboard_button keyboard_button_m">m</td>
             <td style="width: 15%"></td>
         </tr>
     </table>
@@ -213,9 +217,35 @@
 
 </div>
 <script>
-    var a = [];
+    // var letter = {
+    //     orig: 'a',
+    //     enc: 'Ë',
+    //     sugg: 'b',
+    //     id: 7,
+    //     count: 14
+    // };
+    //
+    // var idToLetter = {
+    //     7: letter
+    // };
+    //
+    // var origToLetter = {
+    //     'a': letter
+    // };
+    //
+    // var encToLetter = {
+    //     'Ë': letter
+    // };
+    //
+    // var suggToLetter = {
+    //     'b': [letter]
+    // };
+    var origToLetter = {};
+    var encToLetter = {};
+    var idToLetter = [];
+    var suggToLetter = {};
+
     var text;
-    var dic = {};
     var ori_chars = "abcdefghijklmnopqrstuvwxyz";
     var new_chars = "БГДËЖЗИЙЛПФЦЧШЩЬЪЫЭЮЯ@$#&Ωθ";
     // var new_chars = "@#$%^&*θ=][{}Æ<>§ΔΞΩ~¥©¶ØÐ";
@@ -225,10 +255,89 @@
     var level = 1;
     var highlightedIndex = -1;
 
+    function nextLevel () {
+        level++;
+        updateLevelNumber(level);
+        onLoad();
+        $(".keyboard_button").toggleClass("solved", false);
+
+    }
+
     function onLoad () {
+        removeHighlights();
+        level = getLevelFromUrl();
+
+        updateLevelNumber(level);
+
         assignEventHandlers();
-        updateLevel();
-        shuffle();
+        prepareLetters();
+        renderText();
+        drawEncLetters();
+    }
+
+    function getLevelFromUrl () {
+        var hash = window.location.hash;
+        if (hash && hash[0] == '#') {
+            hash = hash.substr(1);
+        }
+        if (!isNaN(hash) && parseInt(hash) < levels.length) {
+            return parseInt(hash);
+        }
+        return 1;
+    }
+
+    function updateLevelNumber (level) {
+        window.location.hash = level;
+        $("#level").text(level);
+    }
+
+    function renderText () {
+        var $t = $("#text_field");
+        $t.empty();
+
+        var text = getArticle(level).toLowerCase();
+        for (var i = 0; i < text.length; i++) {
+            var c = text[i];
+            if (origToLetter.hasOwnProperty(c)) {
+                var letter = origToLetter[c];
+                letter.count++;
+                $s = $("<span class='symbol symbol_" + letter.id + "'>" + letter.enc + "</span>");
+                $s.click(onSymbolClicked.bind(letter.id, letter.id));
+                $t.append($s);
+            } else {
+                $t.append("<span>" + c + "</span>");
+            }
+        }
+    }
+
+    function prepareLetters () {
+        var charSet = shuffleString(new_chars);
+        for (var i = 0; i < ori_chars.length; i++) {
+            var letter = {
+                orig: ori_chars[i],
+                enc: charSet[i],
+                sugg: undefined,
+                id: i,
+                count: 0
+            };
+
+            origToLetter[letter.orig] = letter;
+            encToLetter[letter.enc] = letter;
+            idToLetter[i] = letter;
+        }
+
+        console.log("letters prepared:", origToLetter, encToLetter);
+    }
+
+    function shuffleString (str) {
+        var result = (' ' + str).slice(1);
+        for (var i = 0; i < result.length; i++) {
+            var j = Math.floor(Math.random() * result.length);
+            var t = result[i];
+            result = replaceAt(result, i, result[j]);
+            result = replaceAt(result, j, t);
+        }
+        return result;
     }
 
     function assignEventHandlers () {
@@ -240,11 +349,15 @@
         console.log("onButtonClick", val);
 
         if (highlightedIndex >= 0) {
-            if (dic[a[highlightedIndex].c].v == val) {
-                $("#input_" + highlightedIndex).val("");
-                onCharChanged2(highlightedIndex, a[highlightedIndex].c);
+            var letter = idToLetter[highlightedIndex];
+            if (letter.sugg == val) {
+                onCharChanged2(highlightedIndex, letter.enc);
                 markSolved(highlightedIndex, val, false);
             } else {
+                if (!!letter.sugg) {
+                    markSolved(highlightedIndex, letter.sugg, false);
+                }
+                letter.sugg = val;
                 $("#input_" + highlightedIndex).val(val);
                 onCharChanged2(highlightedIndex, val);
                 markSolved(highlightedIndex, val, true);
@@ -259,19 +372,7 @@
         $(".keyboard_button_" + val).toggleClass("solved", isSolved);
     }
 
-    function updateLevel () {
-        var hash = window.location.hash;
-        if (hash && hash[0] == '#') {
-            hash = hash.substr(1);
-        }
-        if (!isNaN(hash) && parseInt(hash) < levels.length) {
-            level = parseInt(hash);
-        }
-    }
-
     function getArticle (level) {
-        $("#level").text(level);
-        window.location.hash = level;
         return levels[level % levels.length];
     }
 
@@ -282,61 +383,6 @@
         return str.substr(0, index) + chr + str.substr(index + 1);
     }
 
-    function shuffle () {
-        var text = getArticle(level).toLowerCase();
-        level++;
-
-        for (var i = 0; i < new_chars.length; i++) {
-            var j = Math.floor(Math.random() * new_chars.length);
-            var t = new_chars[i];
-            new_chars = replaceAt(new_chars, i, new_chars[j]);
-            new_chars = replaceAt(new_chars, j, t);
-        }
-
-        console.log(new_chars);
-
-        // text = $("#source_text_1").text().toLowerCase();
-        var result = "";
-        for (var i = 0; i < text.length; i++) {
-            var j = ori_chars.indexOf(text[i]);
-            if (j >= 0) {
-                result += new_chars[j];
-            } else {
-                result += text[i];
-            }
-        }
-
-        console.log(result);
-        $("#source_text").text(result);
-
-        prep();
-        replace();
-    }
-
-    function prep () {
-        text = $("#source_text").text();
-        dic = {};
-        a = [];
-        for (var i in text) {
-            var c = text[i];
-            if (new_chars.indexOf(c) >= 0) {
-                if (!dic[c]) {
-                    dic[c] = {c: c, f: 0};
-                }
-                dic[c].f++;
-            }
-        }
-
-        for (var c in dic) {
-            a.push({c: c, f: dic[c].f});
-        }
-        a.sort(function (a, b) {
-            return b.f - a.f;
-        });
-
-        drawFreq();
-    }
-
     function onLetterClick (i) {
         if (highlightedIndex == i) {
             removeHighlights();
@@ -345,36 +391,38 @@
         }
     }
 
-    function drawEncLetters () {
-        $("#enc_letters_container").empty();
-        tr = $("#enc_letters_container").append($("<tr>"));
-
-        for (var i in a) {
-            var td = $("<td class='letter_" + i + "'><div>" + a[i].c + "</div><div>" + a[i].f + "</div></td>");
-            tr.append(td);
-            td.click(onLetterClick.bind(i, i));
-
-            // tr.append($("<td>" + a[i].c + " (" + a[i].f + ")</td><td><input size='2' id='input_" + i + "'></td>"));
-            // $("#input_" + i).focus(higlight.bind(i, i));
-            // $("#input_" + i).focusout(onFocusLeft.bind(i, i));
-            // $("#input_" + i).keyup(onCharChanged.bind(i, i));
+    function getSortedLetters () {
+        var tmp = [];
+        for (var i = 0; i < idToLetter.length; i++) {
+            if (idToLetter[i].count > 0) {
+                tmp.push([idToLetter[i], idToLetter[i].count]);
+            }
         }
+
+        tmp.sort(function (a, b) {
+            return b[1] - a[1]
+        });
+
+        var result = [];
+        for (var i = 0; i < tmp.length; i++) {
+            result.push(tmp[i][0]);
+        }
+        return result;
     }
 
-    function drawFreq () {
-        drawEncLetters();
-        $("#container").empty();
-        var tr;
-        var col = 4;
-        for (var i in a) {
-            if (i % col == 0) {
-                tr = $("#container").append($("<tr>"));
-            }
+    function drawEncLetters () {
+        var sortedLetters = getSortedLetters();
 
-            console.log(a[i].c);
-            tr.append($("<td>" + a[i].c + " (" + a[i].f + ")</td><td><input size='2' id='input_" + i + "'></td>"));
-            $("#input_" + i).focus(higlight.bind(i, i));
-            $("#input_" + i).keyup(onCharChanged.bind(i, i));
+        console.log("sortedLetters", sortedLetters);
+
+        $("#enc_letters_container").empty();
+        var tr = $("#enc_letters_container").append($("<tr>"));
+
+        for (var i in sortedLetters) {
+            var letter = sortedLetters[i];
+            var td = $("<td class='letter_" + letter.id + "'><div>" + letter.enc + "</div><div>" + letter.count + "</div></td>");
+            tr.append(td);
+            td.click(onLetterClick.bind(letter.id, letter.id));
         }
     }
 
@@ -383,9 +431,9 @@
         highlightedIndex = i;
         toggleHighlight(i, true);
 
-        var val = dic[a[i].c].v;
-        if (!!val && !dic.hasOwnProperty(val)) {
-            $(".keyboard_button_" + dic[a[i].c].v).toggleClass("highlighted", true);
+        var letter = idToLetter[i];
+        if (!!letter && !!letter.sugg) {
+            $(".keyboard_button_" + letter.sugg).toggleClass("highlighted", true);
         }
 
         // $(".symbol_" + i).css("background", "lightblue");
@@ -395,8 +443,8 @@
     function removeHighlights () {
         highlightedIndex = -1;
         $(".keyboard_button").toggleClass("highlighted", false);
-        for (var i in a) {
-            toggleHighlight(i, false);
+        for (var i in idToLetter) {
+            toggleHighlight(idToLetter[i].id, false);
         }
     }
 
@@ -415,62 +463,26 @@
         higlight(i);
     }
 
-    function replace () {
-        for (var i in a) {
-            var v = $("#input_" + i).val();
-            dic[a[i].c].i = i;
-            if (v.length > 1) {
-                v = v[v.length - 1];
-                $("#input_" + i).val(v);
-            }
-            if (v.length == 1) {
-                dic[a[i].c].v = v;
-                // newText = newText.replace(new RegExp(a[i].c, 'g'), v);
-            } else {
-                dic[a[i].c].v = null;
-            }
-        }
-
-        $("#result").empty();
-        for (var i in text) {
-            var c = text[i];
-            if (!dic[c]) {
-                $("#result").append("<span>" + c + "</span>");
-            } else if (!!dic[c] && !!dic[c].v) {
-                $("#result").append(
-                    "<span class='symbol bold symbol_" + dic[c].i + "' onclick='onSymbolClicked(" + dic[c].i + ")' " + ">" + dic[c].v
-                    + "</span>");
-            } else {
-                $("#result").append(
-                    "<span class='symbol symbol_" + dic[c].i + "' onclick='onSymbolClicked(" + dic[c].i + ")' class='symbol_" + dic[c].i
-                    + "' >" + c + "</span>");
-            }
-        }
-    }
-
     function replace2 (i, v) {
-        dic[a[i].c].v = v;
+        idToLetter[i].sugg = v;
 
         $(".symbol_" + i).text(v);
 
-        if (dic.hasOwnProperty(v)) {
+        if (encToLetter.hasOwnProperty(v)) { // encrypted symbol entered
             $(".symbol_" + i).toggleClass("bold", false);
         } else {
             $(".symbol_" + i).toggleClass("bold", true);
         }
-
-        console.log("dic: ", dic);
-        console.log("a: ", a);
     }
 
     function help () {
-        for (var i in a) {
-            var o = ori_chars[new_chars.indexOf(a[i].c)];
-
-            if ($("#input_" + i).val() != o) {
-                $("#input_" + i).val(o);
-                onCharChanged2(i, o);
-                markSolved(i, o, true);
+        var sortedLetters = getSortedLetters();
+        for (var i in sortedLetters) {
+            var letter = sortedLetters[i];
+            if (letter.orig != letter.sugg) {
+                letter.sugg = letter.orig;
+                onCharChanged2(letter.id, letter.orig);
+                markSolved(letter.id, letter.orig, true);
                 return;
             }
         }
@@ -486,11 +498,7 @@
 
     $(onLoad);
 
-    // prep();
-    // replace();
-
-    $("#do_button").click(prep);
-    $("#shuffle_button").click(shuffle);
+    $("#nextLevel_button").click(nextLevel);
 
     var levels = [/* 0 */ "",
                           'If you really want to hear about it, the first thing you’ll probably want to know is where I was born, an what my lousy childhood was like, and how my parents were occupied and all before they had me, and all that David Copperfield kind of crap, but I don’t feel like going into it, if you want to know the truth. In the first place, that stuff bores me, and in the second place, my parents would have about two hemorrhages apiece if I told anything pretty personal about them. They’re quite touchy about anything like that, especially my father. They’re nice and all—I’m not saying that—but they’re also touchy as hell. Besides, I’m not going to tell you my whole goddam autobiography or anything. I’ll just tell you about this madman stuff that happened to me around last Christmas just before I got pretty run-down and had to come out here and take it easy. I mean that’s all I told D.B. about, and he’s my brother and all. He’s in Hollywood. That isn’t too far from this crumby place, and he comes over and visits me practically every week end. He’s going to drive me home when I go home next month maybe. He just got a Jaguar. One of those little English jobs that can do around two hundred miles an hour. It cost him damn near four thousand bucks. He’s got a lot of dough, now. He didn’t use to. He used to be just a regular writer, when he was home. He wrote this terrific book of short stories, The Secret Goldfish, in case you never heard of him. The best one in it was “The Secret Goldfish.” It was about this little kid that wouldn’t let anybody look at his goldfish because he’d bought it with his own money. It killed me. Now he’s out in Hollywood, D.B., being a prostitute. If there’s one thing I hate, it’s the movies. Don’t even mention them to me.',
