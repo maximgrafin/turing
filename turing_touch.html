@@ -1,3 +1,7 @@
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <style>
@@ -15,6 +19,8 @@
 
     .result {
         font-family: "Courier New", Courier, monospace;
+        font-size: 30px;
+        /*width: 34px;*/
     }
 
     .keyboard_button_container {
@@ -23,12 +29,30 @@
     }
 
     .keyboard_button {
+        font-size: 43px;
+        height: 50px;
         width: 10%;
         padding: 0;
         cursor: pointer;
         font-weight: bold;
-
+        background: gainsboro;
+        text-align: center;
         /*margin: 2pt;*/
+    }
+
+    .letter_container {
+        width: 100%;
+        max-width: 1000px !important;
+    }
+
+    .letter {
+        /*height: 50px;*/
+        width: 2.6%;
+        padding: 0;
+        cursor: pointer;
+        font-weight: bold;
+        background: lightblue;
+        text-align: center;
     }
 
 </style>
@@ -50,9 +74,6 @@
 <input id="help_button" type="button" value="Reveal 1 letter" onclick="help()"/>
 
 <div id="text_field" class="result"></div>
-
-<table id="enc_letters_container">
-</table>
 
 <div>
     <table class="keyboard_button_container">
@@ -98,6 +119,9 @@
         </tr>
     </table>
 </div>
+
+<table id="enc_letters_container" class="letter_container">
+</table>
 
 <h1>Relative frequencies of letters in the English language</h1>
 <div>
@@ -240,11 +264,121 @@
 
     var text;
     var ori_chars = "abcdefghijklmnopqrstuvwxyz";
-    var new_chars = "БГДËЖЗИЙЛПФЦЧШЩЬЪЫЭЮЯ@$#&Ωθ";
+    // var new_chars = "БГДËЖЗИЙЛПФЦЧШЩЬЪЫЭЮЯ@$#&Ωθ";
     // var new_chars = "@#$%^&*θ=][{}Æ<>§ΔΞΩ~¥©¶ØÐ";
     // var new_chars = "☀☁☂☃★☉☊☍☎☚☞☯☰☻☾♔♕♖\t♗♘\t♙♡♢♤♧♨\t";
     // var new_chars = "☞☖☏☆☃☉☊♔♕♖♗♘♙♡♢♤♧♨࿊☺☼♬♲⚠☑☒☽";
-    // var new_chars = "☞☖☏☆☃☉☊♔♕♖♗♘♙♡♢♤♧♨࿊☺☼♬♲⚠☑☒☽";
+
+    var new_chars = [
+        "&#938;", // Ϊ
+        // "&#892;", // ͼ
+        "&#915;", // Γ
+        "&#916;", // Δ
+        "&#920;", // Θ
+        "&#923;", // Λ
+        "&#926;", // Ξ
+        "&#928;", // Π
+        "&#931;", // Σ
+        "&#934;", // Φ
+        "&#936;", // Ψ
+        "&#937;", // Ω
+        "&#984;", // Ϙ
+        "&#1041;", // Б
+        "&#1043;", // Г
+        "&#1044;", // Д
+        "&#1046;", // Ж
+        "&#1049;", // Й
+        "&#1051;", // Л
+        "&#1055;", // П
+        "&#1062;", // Ц
+        "&#1063;", // Ч
+        "&#1064;", // Ш
+        "&#1066;", // Ъ
+        "&#1067;", // Ы
+        "&#1068;", // Ь
+        "&#1069;", // Э
+        "&#1070;", // Ю
+        "&#1071;", // Я
+        "&#969;" // ω
+    ];
+
+    // var new_chars = [
+    //     "&#9728;", // ☀
+    //     "&#9729;", // ☁
+    //     "&#9730;", // ☂
+    //     "&#9731;", // ☃
+    //     "&#9733;", // ★
+    //     "&#9737;", // ☉
+    //     "&#9738;", // ☊
+    //     "&#9741;", // ☍
+    //     "&#9742;", // ☎
+    //     "&#9747;", // ☓
+    //     "&#9756;", // ☜
+    //     "&#9765;", // ☥
+    //     "&#9775;", // ☯
+    //     "&#9787;", // ☻
+    //     "&#9790;", // ☾
+    //     "&#9818;", // ♚
+    //     "&#9820;", // ♜
+    //     "&#9819;", // ♛
+    //     "&#9821;", // ♝
+    //     "&#9822;", // ♞
+    //     "&#9836;", // ♬
+    //     "&#9856;", // ⚀
+    //     "&#9873;", // ⚑
+    //     "&#9986;", // ✂
+    //     "&#9992;", // ✈
+    //     "&#9998;", // ✎
+    //     "&#10020;", // ✤
+    //     "&#10022;", // ✦
+    //     "&#10047;", // ✿
+    // ];
+
+    // var new_chars = [
+    //     "&#129409;", // 🦁
+    //     "&#8987", // ⌛
+    //     "&#9917", // ⚽
+    //     "&#9925", // ⛅
+    //     "&#9969", // ⛱
+    //     "&#9971", // ⛳
+    //     "&#9973", // ⛵
+    //     "&#9978", // ⛺
+    //     "&#127757", // 🌍
+    //     "&#127763", // 🌓
+    //     "&#127775", // 🌟
+    //     "&#127786", // 🌪
+    //     "&#127794", // 🌲
+    //     "&#127798", // 🌶
+    //     "&#127803", // 🌻
+    //     "&#127812", // 🍄
+    //     "&#127814", // 🍆
+    //     "&#127817", // 🍉
+    //     "&#127829", // 🍕
+    //     "&#127828", // 🍔
+    //     "&#127849", // 🍩
+    //     "&#127839", // 🍟
+    //     "&#127859", // 🍳
+    //     "&#127873", // 🎁
+    //     "&#127875", // 🎃
+    //     "&#127890", // 🎒
+    //     "&#127912", // 🎨
+    //     "&#127918", // 🎮
+    //     "&#127919", // 🎯
+    //     "&#127921", // 🎱
+    //     "&#127939", // 🏃
+    //     "&#127944", // 🏈
+    //     "&#127947", // 🏋
+    //     "&#127949", // 🏍
+    //     "&#127950", // 🏎
+    //     "&#128012", // 🐌
+    //     "&#128018", // 🐒
+    //     "&#128030", // 🐞
+    //     "&#128025", // 🐙
+    //     "&#128054", // 🐶
+    //     "&#128060", // 🐼
+    //     "&#128061", // 🐽
+    //     "&#128123" // 👻
+    // ];
     var level = 1;
     var highlightedIndex = -1;
 
@@ -294,8 +428,11 @@
             if (origToLetter.hasOwnProperty(c)) {
                 var letter = origToLetter[c];
                 letter.count++;
-                $s = $("<span class='symbol symbol_" + letter.id + "'>" + letter.enc + "</span>");
+
+                $s = $("<span class='symbol symbol_" + letter.id + "'></span>");
+                $s.html(letter.enc);
                 $s.click(onSymbolClicked.bind(letter.id, letter.id));
+
                 $t.append($s);
             } else {
                 $t.append("<span>" + c + "</span>");
@@ -323,12 +460,12 @@
     }
 
     function shuffleString (str) {
-        var result = (' ' + str).slice(1);
+        var result = str.slice();
         for (var i = 0; i < result.length; i++) {
             var j = Math.floor(Math.random() * result.length);
             var t = result[i];
-            result = replaceAt(result, i, result[j]);
-            result = replaceAt(result, j, t);
+            result[i] = result[j];
+            result[j] = t;
         }
         return result;
     }
@@ -340,6 +477,12 @@
     function onButtonClick () {
         var val = $(this).text().toLowerCase();
         console.log("onButtonClick", val);
+
+        onLetterSelected(val);
+    }
+
+    function onLetterSelected (val) {
+        console.log("onLetterSelected", val);
 
         if (highlightedIndex >= 0) {
             var letter = idToLetter[highlightedIndex];
@@ -413,7 +556,7 @@
 
         for (var i in sortedLetters) {
             var letter = sortedLetters[i];
-            var td = $("<td class='letter_" + letter.id + "'><div>" + letter.enc + "</div><div>" + letter.count + "</div></td>");
+            var td = $("<td class='letter letter_" + letter.id + "'><div>" + letter.enc + "</div><div>" + letter.count + "</div></td>");
             tr.append(td);
             td.click(onLetterClick.bind(letter.id, letter.id));
         }
@@ -451,15 +594,14 @@
         higlight(i);
     }
 
-    function onCharChanged (i) {
-        replace();
-        higlight(i);
-    }
-
     function replace2 (i, v) {
-        idToLetter[i].sugg = v;
+        if (v >= "a" && v <= "z") {
+            idToLetter[i].sugg = v;
+        } else {
+            idToLetter[i].sugg = null;
+        }
 
-        $(".symbol_" + i).text(v);
+        $(".symbol_" + i).html(v);
 
         if (encToLetter.hasOwnProperty(v)) { // encrypted symbol entered
             $(".symbol_" + i).toggleClass("bold", false);
@@ -492,6 +634,15 @@
     $(onLoad);
 
     $("#nextLevel_button").click(nextLevel);
+
+    $(window).keyup(function (event) {
+        if(!event || ! event.key)
+            return;
+        var val = event.key.toLowerCase();
+        if (val >= "a" && val <= "z") {
+            onLetterSelected(val);
+        }
+    });
 
     var levels = [/* 0 */ "",
                           'If you really want to hear about it, the first thing you’ll probably want to know is where I was born, an what my lousy childhood was like, and how my parents were occupied and all before they had me, and all that David Copperfield kind of crap, but I don’t feel like going into it, if you want to know the truth. In the first place, that stuff bores me, and in the second place, my parents would have about two hemorrhages apiece if I told anything pretty personal about them. They’re quite touchy about anything like that, especially my father. They’re nice and all—I’m not saying that—but they’re also touchy as hell. Besides, I’m not going to tell you my whole goddam autobiography or anything. I’ll just tell you about this madman stuff that happened to me around last Christmas just before I got pretty run-down and had to come out here and take it easy. I mean that’s all I told D.B. about, and he’s my brother and all. He’s in Hollywood. That isn’t too far from this crumby place, and he comes over and visits me practically every week end. He’s going to drive me home when I go home next month maybe. He just got a Jaguar. One of those little English jobs that can do around two hundred miles an hour. It cost him damn near four thousand bucks. He’s got a lot of dough, now. He didn’t use to. He used to be just a regular writer, when he was home. He wrote this terrific book of short stories, The Secret Goldfish, in case you never heard of him. The best one in it was “The Secret Goldfish.” It was about this little kid that wouldn’t let anybody look at his goldfish because he’d bought it with his own money. It killed me. Now he’s out in Hollywood, D.B., being a prostitute. If there’s one thing I hate, it’s the movies. Don’t even mention them to me.',
