@@ -1,0 +1,681 @@
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<style>
+    .highlighted {
+        background: lightblue;
+    }
+
+    .upper {
+        text-transform: uppercase;
+    }
+
+    .solved {
+        color: grey;
+    }
+
+    .symbol.bold {
+        font-weight: bold;
+    }
+
+    .result {
+        font-family: "Courier New", Courier, monospace;
+        font-size: 30px;
+        /*width: 34px;*/
+    }
+
+    .keyboard_button_container {
+        width: 100%;
+        max-width: 1000px !important;
+    }
+
+    .keyboard_button {
+        font-size: 43px;
+        height: 50px;
+        width: 10%;
+        padding: 0;
+        cursor: pointer;
+        font-weight: bold;
+        background: gainsboro;
+        text-align: center;
+        /*margin: 2pt;*/
+    }
+
+    .letter_container {
+        width: 100%;
+        max-width: 1000px !important;
+    }
+
+    .letter {
+        /*height: 50px;*/
+        width: 2.6%;
+        padding: 0;
+        cursor: pointer;
+        font-weight: bold;
+        background: lightblue;
+        text-align: center;
+    }
+
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54334811-3"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag () {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-54334811-3');
+</script>
+
+<h1>Level: <span id="level"></span></h1>
+<input id="nextLevel_button" type="button" value="Next level"/>
+<input id="help_button" type="button" value="Reveal 1 letter" onclick="help()"/>
+
+<div id="text_field" class="result"></div>
+
+<div>
+    <table class="keyboard_button_container">
+        <tr>
+            <td class="keyboard_button keyboard_button_q">q</td>
+            <td class="keyboard_button keyboard_button_w">w</td>
+            <td class="keyboard_button keyboard_button_e">e</td>
+            <td class="keyboard_button keyboard_button_r">r</td>
+            <td class="keyboard_button keyboard_button_t">t</td>
+            <td class="keyboard_button keyboard_button_y">y</td>
+            <td class="keyboard_button keyboard_button_u">u</td>
+            <td class="keyboard_button keyboard_button_i">i</td>
+            <td class="keyboard_button keyboard_button_o">o</td>
+            <td class="keyboard_button keyboard_button_p">p</td>
+        </tr>
+    </table>
+    <table class="keyboard_button_container">
+        <tr>
+            <td style="width: 5%"></td>
+            <td class="keyboard_button keyboard_button_a">a</td>
+            <td class="keyboard_button keyboard_button_s">s</td>
+            <td class="keyboard_button keyboard_button_d">d</td>
+            <td class="keyboard_button keyboard_button_f">f</td>
+            <td class="keyboard_button keyboard_button_g">g</td>
+            <td class="keyboard_button keyboard_button_h">h</td>
+            <td class="keyboard_button keyboard_button_j">j</td>
+            <td class="keyboard_button keyboard_button_k">k</td>
+            <td class="keyboard_button keyboard_button_l">l</td>
+            <td style="width: 5%"></td>
+        </tr>
+    </table>
+    <table class="keyboard_button_container">
+        <tr>
+            <td style="width: 15%"></td>
+            <td class="keyboard_button keyboard_button_z">z</td>
+            <td class="keyboard_button keyboard_button_x">x</td>
+            <td class="keyboard_button keyboard_button_c">c</td>
+            <td class="keyboard_button keyboard_button_v">v</td>
+            <td class="keyboard_button keyboard_button_b">b</td>
+            <td class="keyboard_button keyboard_button_n">n</td>
+            <td class="keyboard_button keyboard_button_m">m</td>
+            <td style="width: 15%"></td>
+        </tr>
+    </table>
+</div>
+
+<table id="enc_letters_container" class="letter_container">
+</table>
+
+<h1>Relative frequencies of letters in the English language</h1>
+<div>
+    <table>
+        <tr>
+            <td>e</td>
+            <td>12.702%</td>
+        </tr>
+        <tr>
+            <td>t</td>
+            <td>9.056%</td>
+        </tr>
+        <tr>
+            <td>a</td>
+            <td>8.167%</td>
+        </tr>
+        <tr>
+            <td>o</td>
+            <td>7.507%</td>
+        </tr>
+        <tr>
+            <td>i</td>
+            <td>6.966%</td>
+        </tr>
+        <tr>
+            <td>n</td>
+            <td>6.749%</td>
+        </tr>
+        <tr>
+            <td>s</td>
+            <td>6.327%</td>
+        </tr>
+        <tr>
+            <td>h</td>
+            <td>6.094%</td>
+        </tr>
+        <tr>
+            <td>r</td>
+            <td>5.987%</td>
+        </tr>
+        <tr>
+            <td>d</td>
+            <td>4.253%</td>
+        </tr>
+        <tr>
+            <td>l</td>
+            <td>4.025%</td>
+        </tr>
+        <tr>
+            <td>c</td>
+            <td>2.782%</td>
+        </tr>
+        <tr>
+            <td>u</td>
+            <td>2.758%</td>
+        </tr>
+        <tr>
+            <td>m</td>
+            <td>2.406%</td>
+        </tr>
+        <tr>
+            <td>w</td>
+            <td>2.360%</td>
+        </tr>
+        <tr>
+            <td>f</td>
+            <td>2.228%</td>
+        </tr>
+        <tr>
+            <td>g</td>
+            <td>2.015%</td>
+        </tr>
+        <tr>
+            <td>y</td>
+            <td>1.974%</td>
+        </tr>
+        <tr>
+            <td>p</td>
+            <td>1.929%</td>
+        </tr>
+        <tr>
+            <td>b</td>
+            <td>1.492%</td>
+        </tr>
+        <tr>
+            <td>v</td>
+            <td>0.978%</td>
+        </tr>
+        <tr>
+            <td>k</td>
+            <td>0.772%</td>
+        </tr>
+        <tr>
+            <td>j</td>
+            <td>0.153%</td>
+        </tr>
+        <tr>
+            <td>x</td>
+            <td>0.150%</td>
+        </tr>
+        <tr>
+            <td>q</td>
+            <td>0.095%</td>
+        </tr>
+        <tr>
+            <td>z</td>
+            <td>0.074%</td>
+        </tr>
+    </table>
+
+</div>
+<script>
+    // var letter = {
+    //     orig: 'a',
+    //     enc: 'Ë',
+    //     sugg: 'b',
+    //     id: 7,
+    //     count: 14
+    // };
+    //
+    // var idToLetter = {
+    //     7: letter
+    // };
+    //
+    // var origToLetter = {
+    //     'a': letter
+    // };
+    //
+    // var encToLetter = {
+    //     'Ë': letter
+    // };
+    //
+    // var suggToLetter = {
+    //     'b': [letter]
+    // };
+    var origToLetter = {};
+    var encToLetter = {};
+    var idToLetter = [];
+    var suggToLetter = {};
+
+    var text;
+    var ori_chars = "abcdefghijklmnopqrstuvwxyz";
+    // var new_chars = "БГДËЖЗИЙЛПФЦЧШЩЬЪЫЭЮЯ@$#&Ωθ";
+    // var new_chars = "@#$%^&*θ=][{}Æ<>§ΔΞΩ~¥©¶ØÐ";
+    // var new_chars = "☀☁☂☃★☉☊☍☎☚☞☯☰☻☾♔♕♖\t♗♘\t♙♡♢♤♧♨\t";
+    // var new_chars = "☞☖☏☆☃☉☊♔♕♖♗♘♙♡♢♤♧♨࿊☺☼♬♲⚠☑☒☽";
+
+    var new_chars = [
+        "&#938;", // Ϊ
+        // "&#892;", // ͼ
+        "&#916;", // Δ
+        "&#920;", // Θ
+        "&#923;", // Λ
+        "&#926;", // Ξ
+        "&#931;", // Σ
+        "&#934;", // Φ
+        "&#936;", // Ψ
+        "&#937;", // Ω
+        "&#984;", // Ϙ
+        "&#1041;", // Б
+        "&#1043;", // Г
+        "&#1044;", // Д
+        "&#1046;", // Ж
+        "&#1049;", // Й
+        "&#1051;", // Л
+        "&#1055;", // П
+        "&#1062;", // Ц
+        "&#1063;", // Ч
+        "&#1064;", // Ш
+        "&#1066;", // Ъ
+        "&#1067;", // Ы
+        "&#1068;", // Ь
+        "&#1069;", // Э
+        "&#1070;", // Ю
+        "&#1071;", // Я
+        "&#969;" // ω
+    ];
+
+    // var new_chars = [
+    //     "&#9728;", // ☀
+    //     "&#9729;", // ☁
+    //     "&#9730;", // ☂
+    //     "&#9731;", // ☃
+    //     "&#9733;", // ★
+    //     "&#9737;", // ☉
+    //     "&#9738;", // ☊
+    //     "&#9741;", // ☍
+    //     "&#9742;", // ☎
+    //     "&#9747;", // ☓
+    //     "&#9756;", // ☜
+    //     "&#9765;", // ☥
+    //     "&#9775;", // ☯
+    //     "&#9787;", // ☻
+    //     "&#9790;", // ☾
+    //     "&#9818;", // ♚
+    //     "&#9820;", // ♜
+    //     "&#9819;", // ♛
+    //     "&#9821;", // ♝
+    //     "&#9822;", // ♞
+    //     "&#9836;", // ♬
+    //     "&#9856;", // ⚀
+    //     "&#9873;", // ⚑
+    //     "&#9986;", // ✂
+    //     "&#9992;", // ✈
+    //     "&#9998;", // ✎
+    //     "&#10020;", // ✤
+    //     "&#10022;", // ✦
+    //     "&#10047;", // ✿
+    // ];
+
+    // var new_chars = [
+    //     "&#129409;", // 🦁
+    //     "&#8987", // ⌛
+    //     "&#9917", // ⚽
+    //     "&#9925", // ⛅
+    //     "&#9969", // ⛱
+    //     "&#9971", // ⛳
+    //     "&#9973", // ⛵
+    //     "&#9978", // ⛺
+    //     "&#127757", // 🌍
+    //     "&#127763", // 🌓
+    //     "&#127775", // 🌟
+    //     "&#127786", // 🌪
+    //     "&#127794", // 🌲
+    //     "&#127798", // 🌶
+    //     "&#127803", // 🌻
+    //     "&#127812", // 🍄
+    //     "&#127814", // 🍆
+    //     "&#127817", // 🍉
+    //     "&#127829", // 🍕
+    //     "&#127828", // 🍔
+    //     "&#127849", // 🍩
+    //     "&#127839", // 🍟
+    //     "&#127859", // 🍳
+    //     "&#127873", // 🎁
+    //     "&#127875", // 🎃
+    //     "&#127890", // 🎒
+    //     "&#127912", // 🎨
+    //     "&#127918", // 🎮
+    //     "&#127919", // 🎯
+    //     "&#127921", // 🎱
+    //     "&#127939", // 🏃
+    //     "&#127944", // 🏈
+    //     "&#127947", // 🏋
+    //     "&#127949", // 🏍
+    //     "&#127950", // 🏎
+    //     "&#128012", // 🐌
+    //     "&#128018", // 🐒
+    //     "&#128030", // 🐞
+    //     "&#128025", // 🐙
+    //     "&#128054", // 🐶
+    //     "&#128060", // 🐼
+    //     "&#128061", // 🐽
+    //     "&#128123" // 👻
+    // ];
+    var level = 1;
+    var highlightedIndex = -1;
+
+    function nextLevel () {
+        level++;
+        updateLevelNumber(level);
+        onLoad();
+        $(".keyboard_button").toggleClass("solved", false);
+
+    }
+
+    function onLoad () {
+        removeHighlights();
+        level = getLevelFromUrl();
+
+        updateLevelNumber(level);
+
+        prepareLetters();
+        renderText();
+        drawEncLetters();
+    }
+
+    function getLevelFromUrl () {
+        var hash = window.location.hash;
+        if (hash && hash[0] == '#') {
+            hash = hash.substr(1);
+        }
+        if (!isNaN(hash) && parseInt(hash) < levels.length) {
+            return parseInt(hash);
+        }
+        return 1;
+    }
+
+    function updateLevelNumber (level) {
+        window.location.hash = level;
+        $("#level").text(level);
+    }
+
+    function renderText () {
+        var $t = $("#text_field");
+        $t.empty();
+
+        // var text = getArticle(level).toLowerCase();
+        var text = getArticle(level);
+        for (var i = 0; i < text.length; i++) {
+            var co = text[i];
+            var c = co.toLowerCase();
+            if (origToLetter.hasOwnProperty(c)) {
+                var letter = origToLetter[c];
+                letter.count++;
+
+                $s = $("<span class='symbol symbol_" + letter.id + "'></span>");
+                $s.html(letter.enc);
+                $s.click(onSymbolClicked.bind(letter.id, letter.id));
+
+                if(co.toUpperCase() == co) {
+                    $s.toggleClass("upper", true);
+                }
+
+                $t.append($s);
+            } else {
+                if (c == "\n") {
+                    $t.append("<br />");
+                } else {
+                    $t.append("<span>" + c + "</span>");
+                }
+            }
+        }
+    }
+
+    function prepareLetters () {
+        var charSet = shuffleString(new_chars);
+        for (var i = 0; i < ori_chars.length; i++) {
+            var letter = {
+                orig: ori_chars[i],
+                enc: charSet[i],
+                sugg: undefined,
+                id: i,
+                count: 0
+            };
+
+            origToLetter[letter.orig] = letter;
+            encToLetter[letter.enc] = letter;
+            idToLetter[i] = letter;
+        }
+
+        console.log("letters prepared:", origToLetter, encToLetter);
+    }
+
+    function shuffleString (str) {
+        var result = str.slice();
+        for (var i = 0; i < result.length; i++) {
+            var j = Math.floor(Math.random() * result.length);
+            var t = result[i];
+            result[i] = result[j];
+            result[j] = t;
+        }
+        return result;
+    }
+
+    function assignEventHandlers () {
+        $(".keyboard_button").click(onButtonClick);
+    }
+
+    function onButtonClick () {
+        var val = $(this).text().toLowerCase();
+        console.log("onButtonClick", val);
+
+        onLetterSelected(val);
+    }
+
+    function onLetterSelected (val) {
+        console.log("onLetterSelected", val);
+
+        if (highlightedIndex >= 0) {
+            var letter = idToLetter[highlightedIndex];
+            if (letter.sugg == val) {
+                onCharChanged2(highlightedIndex, letter.enc);
+                markSolved(highlightedIndex, val, false);
+            } else {
+                if (!!letter.sugg) {
+                    markSolved(highlightedIndex, letter.sugg, false);
+                }
+                letter.sugg = val;
+                $("#input_" + highlightedIndex).val(val);
+                onCharChanged2(highlightedIndex, val);
+                markSolved(highlightedIndex, val, true);
+            }
+        } else {
+            // TODO highlight symbol if there is any
+        }
+    }
+
+    function markSolved (i, val, isSolved) {
+        $(".letter_" + i).toggleClass("solved", isSolved);
+        $(".keyboard_button_" + val).toggleClass("solved", isSolved);
+    }
+
+    function getArticle (level) {
+        return levels[level % levels.length];
+    }
+
+    function replaceAt (str, index, chr) {
+        if (index > str.length - 1) {
+            return str;
+        }
+        return str.substr(0, index) + chr + str.substr(index + 1);
+    }
+
+    function onLetterClick (i) {
+        if (highlightedIndex == i) {
+            removeHighlights();
+        } else {
+            higlight(i);
+        }
+    }
+
+    function getSortedLetters () {
+        var tmp = [];
+        for (var i = 0; i < idToLetter.length; i++) {
+            if (idToLetter[i].count > 0) {
+                tmp.push([idToLetter[i], idToLetter[i].count]);
+            }
+        }
+
+        tmp.sort(function (a, b) {
+            return b[1] - a[1]
+        });
+
+        var result = [];
+        for (var i = 0; i < tmp.length; i++) {
+            result.push(tmp[i][0]);
+        }
+        return result;
+    }
+
+    function drawEncLetters () {
+        var sortedLetters = getSortedLetters();
+
+        console.log("sortedLetters", sortedLetters);
+
+        $("#enc_letters_container").empty();
+        var tr = $("#enc_letters_container").append($("<tr>"));
+
+        for (var i in sortedLetters) {
+            var letter = sortedLetters[i];
+            var td = $("<td class='letter letter_" + letter.id + "'><div>" + letter.enc + "</div><div>" + letter.count + "</div></td>");
+            tr.append(td);
+            td.click(onLetterClick.bind(letter.id, letter.id));
+        }
+    }
+
+    function higlight (i) {
+        removeHighlights();
+        highlightedIndex = i;
+        toggleHighlight(i, true);
+
+        var letter = idToLetter[i];
+        if (!!letter && !!letter.sugg) {
+            $(".keyboard_button_" + letter.sugg).toggleClass("highlighted", true);
+        }
+
+        // $(".symbol_" + i).css("background", "lightblue");
+        // $(".letter_" + i).css("background", "lightblue");
+    }
+
+    function removeHighlights () {
+        highlightedIndex = -1;
+        $(".keyboard_button").toggleClass("highlighted", false);
+        for (var i in idToLetter) {
+            toggleHighlight(idToLetter[i].id, false);
+        }
+    }
+
+    function toggleHighlight (i, isHighlighted) {
+        $(".symbol_" + i).toggleClass("highlighted", isHighlighted);
+        $(".letter_" + i).toggleClass("highlighted", isHighlighted);
+    }
+
+    function onCharChanged2 (i, v) {
+        replace2(i, v);
+        higlight(i);
+    }
+
+    function replace2 (i, v) {
+        if (v >= "a" && v <= "z") {
+            idToLetter[i].sugg = v;
+        } else {
+            idToLetter[i].sugg = null;
+        }
+
+        $(".symbol_" + i).html(v);
+
+        if (encToLetter.hasOwnProperty(v)) { // encrypted symbol entered
+            $(".symbol_" + i).toggleClass("bold", false);
+        } else {
+            $(".symbol_" + i).toggleClass("bold", true);
+        }
+    }
+
+    function help () {
+        var sortedLetters = getSortedLetters();
+        for (var i in sortedLetters) {
+            var letter = sortedLetters[i];
+            if (letter.orig != letter.sugg) {
+                letter.sugg = letter.orig;
+                onCharChanged2(letter.id, letter.orig);
+                markSolved(letter.id, letter.orig, true);
+                return;
+            }
+        }
+    }
+
+    function onSymbolClicked (i) {
+        if (highlightedIndex == i) {
+            removeHighlights();
+        } else {
+            higlight(i);
+        }
+    }
+
+    $(onLoad);
+
+    $("#nextLevel_button").click(nextLevel);
+
+    $(window).keyup(function (event) {
+        if (!event || !event.key) {
+            return;
+        }
+        var val = event.key.toLowerCase();
+        if (val >= "a" && val <= "z") {
+            onLetterSelected(val);
+        }
+    });
+
+    assignEventHandlers();
+
+    var levels = [/* 0 */ "",
+                          'THE OCTOPUS MAROONED.\n A trust is its weakest point, said Jeff Peters. That, said I, sounds like one of those unintelligible remarks such as, \'Why is a policeman?\' It is not, said Jeff. There are no relations between a trust and a policeman. My remark was an epitogram-an axis-a kind of mulct\'em in parvo. What it means is that a trust is like an egg, and it is not like an egg. If you want to break an egg you have to do it from the outside. The only way to break up a trust is from the inside. Keep sitting on it until it hatches. Look at the brood of young colleges and libraries that\'s chirping and peeping all over the country. Yes, sir, every trust bears in its own bosom the seeds of its destruction like a rooster that crows near a Georgia colored Methodist camp meeting, or a Republican announcing himself a candidate for governor of Texas. ',
+                          'I asked Jeff, jestingly, if he had ever, during his checkered, plaided, mottled, pied and dappled career, conducted an enterprise of the class to which the word trust had been applied. Somewhat to my surprise he acknowledged the corner. Once, said he. And the state seal of New Jersey never bit into a charter that opened up a solider and safer piece of legitimate octopusing. We had everything in our favor-wind, water, police, nerve, and a clean monopoly of an article indispensable to the public. There wasn\'t a trust buster on the globe that could have found a weak spot in our scheme. It made Rockefeller\'s little kerosene speculation look like a bucket shop. But we lost out. Some unforeseen opposition came up, I suppose, I said. ',
+                          'No, sir, it was just as I said. We were self-curbed. It was a case of auto-suppression. There was a rift within the loot, as Albert Tennyson says. You remember I told you that me and Andy Tucker was partners for some years. That man was the most talented conniver at stratagems I ever saw. Whenever he saw a dollar in another man\'s hands he took it as a personal grudge, if he couldn\'t take it any other way. Andy was educated, too, besides having a lot of useful information. He had acquired a big amount of experience out of books, and could talk for hours on any subject connected with ideas and discourse. He had been in every line of graft from lecturing on Palestine with a lot of magic lantern pictures of the annual Custom-made Clothiers\' Association convention at Atlantic City to flooding Connecticut with bogus wood alcohol distilled from nutmegs. ',
+                          'One Spring me and Andy had been over in Mexico on a flying trip during which a Philadelphia capitalist had paid us $2,500 for a half interest in a silver mine in Chihuahua. Oh, yes, the mine was all right. The other half interest must have been worth two or three thousand. I often wondered who owned that mine. In coming back to the United States me and Andy stubbed our toes against a little town in Texas on the bank of the Rio Grande. The name of it was Bird City; but it wasn\'t. The town had about 2,000 inhabitants, mostly men. I figured out that their principal means of existence was in living close to tall chaparral. Some of \'em were stockmen and some gamblers and some horse peculators and plenty were in the smuggling line. Me and Andy put up at a hotel that was built like something between a roof-garden and a sectional bookcase. ',
+                          'It began to rain the day we got there. As the saying is, Juniper Aquarius was sure turning on the water plugs on Mount Amphibious. Now, there were three saloons in Bird City, though neither Andy nor me drank. But we could see the townspeople making a triangular procession from one to another all day and half the night. Everybody seemed to know what to do with as much money as they had. The third day of the rain it slacked up awhile in the afternoon, so me and Andy walked out to the edge of town to view the mudscape. Bird City was built between the Rio Grande and a deep wide arroyo that used to be the old bed of the river. The bank between the stream and its old bed was cracking and giving away, when we saw it, on account of the high water caused by the rain. ',
+                          'Andy looks at it a long time. That man\'s intellects was never idle. And then he unfolds to me a instantaneous idea that has occurred to him. Right there was organized a trust; and we walked back into town and put it on the market. First we went to the main saloon in Bird City, called the Blue Snake, and bought it. It cost us $1,200. And then we dropped in, casual, at Mexican Joe\'s place, referred to the rain, and bought him out for $500. The other one came easy at $400. The next morning Bird City woke up and found itself an island. The river had busted through its old channel, and the town was surrounded by roaring torrents. The rain was still raining, and there was heavy clouds in the northwest that presaged about six more mean annual rainfalls during the next two weeks. ',
+                          'But the worst was yet to come. Bird City hopped out of its nest, waggled its pin feathers and strolled out for its matutinal toot. Lo! Mexican Joe\'s place was closed and likewise the other little \'dobe life saving station. So, naturally the body politic emits thirsty ejaculations of surprise and ports hellum for the Blue Snake. And what does it find there? Behind one end of the bar sits Jefferson Peters, octopus, with a sixshooter on each side of him, ready to make change or corpses as the case may be. There are three bartenders; and on the wall is a ten foot sign reading: \'All Drinks One Dollar.\' Andy sits on the safe in his neat blue suit and gold-banded cigar, on the lookout for emergencies. The town marshal is there with two deputies to keep order, having been promised free drinks by the trust. ',
+                          'Well, sir, it took Bird City just ten minutes to realize that it was in a cage. We expected trouble; but there wasn\'t any. The citizens saw that we had \'em. The nearest railroad was thirty miles away; and it would be two weeks at least before the river would be fordable. So they began to cuss, amiable, and throw down dollars on the bar till it sounded like a selection on the xylophone. There was about 1,500 grown-up adults in Bird City that had arrived at years of indiscretion; and the majority of \'em required from three to twenty drinks a day to make life endurable. The Blue Snake was the only place where they could get \'em till the flood subsided. It was beautiful and simple as all truly great swindles are. ',
+                          'About ten o\'clock the silver dollars dropping on the bar slowed down to playing two-steps and marches instead of jigs. But I looked out the window and saw a hundred or two of our customers standing in line at Bird City Savings and Loan Co., and I knew they were borrowing more money to be sucked in by the clammy tendrils of the octopus. At the fashionable hour of noon everybody went home to dinner. We told the bartenders to take advantage of the lull, and do the same. Then me and Andy counted the receipts. We had taken in $1,300. We calculated that if Bird City would only remain an island for two weeks the trust would be able to endow the Chicago University with a new dormitory of padded cells for the faculty, and present every worthy poor man in Texas with a farm, provided he furnished the site for it. ',
+                          'Andy was especial inroaded by self-esteem at our success, the rudiments of the scheme having originated in his own surmises and premonitions. He got off the safe and lit the biggest cigar in the house. \'Jeff,\' says he, \'I don\'t suppose that anywhere in the world you could find three cormorants with brighter ideas about down-treading the proletariat than the firm of Peters, Satan and Tucker, incorporated. We have sure handed the small consumer a giant blow in the sole apoplectic region. No?\' \'Well,\' says I, \'it does look as if we would have to take up gastritis and golf or be measured for kilts in spite of ourselves. This little turn in bug juice is, verily, all to the Skibo. And I can stand it,\' says I, \'I\'d rather batten than bant any day.\' Andy pours himself out four fingers of our best rye and does with it as was so intended. It was the first drink I had ever known him to take. ',
+                          '\'By way of liberation,\' says he, \'to the gods.\' And then after thus doing umbrage to the heathen diabetes he drinks another to our success. And then he begins to toast the trade, beginning with Raisuli and the Northern Pacific, and on down the line to the little ones like the school book combine and the oleomargarine outrages and the Lehigh Valley and Great Scott Coal Federation. \'It\'s all right, Andy,\' says I, \'to drink the health of our brother monopolists, but don\'t overdo the wassail. You know our most eminent and loathed multi-corruptionists live on weak tea and dog biscuits.\' Andy went in the back room awhile and came out dressed in his best clothes. There was a kind of murderous and soulful look of gentle riotousness in his eye that I didn\'t like. I watched him to see what turn the whiskey was going to take in him. There are two times when you never can tell what is going to happen. ',
+                          'One is when a man takes his first drink; and the other is when a woman takes her latest. In less than an hour Andy\'s skate had turned to an ice yacht. He was outwardly decent and managed to preserve his aquarium, but inside he was impromptu and full of unexpectedness. \'Jeff,\' says he, \'do you know that I\'m a crater-a living crater?\' \'That\'s a self-evident hypothesis,\' says I. \'But you\'re not Irish. Why don\'t you say \'creature,\' according to the rules and syntax of America?\' \'I\'m the crater of a volcano,\' says he. \'I\'m all aflame and crammed inside with an assortment of words and phrases that have got to have an exodus. I can feel millions of synonyms and parts of speech rising in me,\' says he, \'and I\'ve got to make a speech of some sort. Drink,\' says Andy, \'always drives me to oratory.\' ',
+                          '\'It could do no worse,\' says I. \'From my earliest recollections,\' says he, \'alcohol seemed to stimulate my sense of recitation and rhetoric. Why, in Bryan\'s second campaign,\' says Andy, \'they used to give me three gin rickeys and I\'d speak two hours longer than Billy himself could on the silver question. Finally, they persuaded me to take the gold cure.\' \'If you\'ve got to get rid of your excess verbiage,\' says I, \'why not go out on the river bank and speak a piece? It seems to me there was an old spell-binder named Cantharides that used to go and disincorporate himself of his windy numbers along the seashore.\' \'No,\' says Andy, \'I must have an audience. I feel like if I once turned loose people would begin to call Senator Beveridge the Grand Young Sphinx of the Wabash. ',
+                          'I\'ve got to get an audience together, Jeff, and get this oral distension assuaged or it may turn in on me and I\'d go about feeling like a deckle-edge edition de luxe of Mrs. E. D. E. N. Southworth.\' \'On what special subject of the theorems and topics does your desire for vocality seem to be connected with?\' I asks. \'I ain\'t particular,\' says Andy. \'I am equally good and varicose on all subjects. I can take up the matter of Russian immigration, or the poetry of John W. Keats, or the tariff, or Kabyle literature, or drainage, and make my audience weep, cry, sob and shed tears by turns.\' \'Well, Andy,\' says I, \'if you are bound to get rid of this accumulation of vernacular suppose you go out in town and work it on some indulgent citizen. Me and the boys will take care of the business. ',
+                          'Everybody will be through dinner pretty soon, and salt pork and beans makes a man pretty thirsty. We ought to take in $1,500 more by midnight.\' So Andy goes out of the Blue Snake, and I see him stopping men on the street and talking to \'em. By and by he has half a dozen in a bunch listening to him; and pretty soon I see him waving his arms and elocuting at a good-sized crowd on a corner. When he walks away they string out after him, talking all the time; and he leads \'em down the main street of Bird City with more men joining the procession as they go. It reminded me of the old legerdemain that I\'d read in books about the Pied Piper of Heidsieck charming the children away from the town. ',
+                          'One o\'clock came; and then two; and three got under the wire for place; and not a Bird citizen came in for a drink. The streets were deserted except for some ducks and ladies going to the stores. There was only a light drizzle falling then. A lonesome man came along and stopped in front of the Blue Snake to scrape the mud off his boots. \'Pardner,\' says I, \'what has happened? This morning there was hectic gaiety afoot; and now it seems more like one of them ruined cities of Tyre and Siphon where the lone lizard crawls on the walls of the main port-cullis.\' \'The whole town,\' says the muddy man, \'is up in Sperry\'s wool warehouse listening to your side-kicker make a speech. He is some gravy on delivering himself of audible sounds relating to matters and conclusions,\' says the man. ',
+                          '\'Well, I hope he\'ll adjourn, sine qua non, pretty soon,\' says I, \'for trade languishes.\' Not a customer did we have that afternoon. At six o\'clock two Mexicans brought Andy to the saloon lying across the back of a burro. We put him in bed while he still muttered and gesticulated with his hands and feet. Then I locked up the cash and went out to see what had happened. I met a man who told me all about it. Andy had made the finest two hour speech that had ever been heard in Texas, he said, or anywhere else in the world. \'What was it about?\' I asked. \'Temperance,\' says he. \'And when he got through, every man in Bird City signed the pledge for a year.\''
+
+    ];
+</script>
